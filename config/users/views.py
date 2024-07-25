@@ -1,25 +1,25 @@
-from django.shortcuts import render
+# users/views.py
+
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+
 from . import serializers
 from .models import Profile
 
 User = get_user_model()
 
-# Create your views here.
 
-
-class UserRegistrationAPIView(GenericAPIView):
+class UserRegisterationAPIView(GenericAPIView):
     """
-    An endpoint for the client to create a new User
+    An endpoint for the client to create a new User.
     """
 
     permission_classes = (AllowAny,)
-    serializer_class = serializers.UserRegistrationSerializer
+    serializer_class = serializers.UserRegisterationSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -33,7 +33,7 @@ class UserRegistrationAPIView(GenericAPIView):
 
 class UserLoginAPIView(GenericAPIView):
     """
-    An endpoint to authenticate existing users using their email and password
+    An endpoint to authenticate existing users using their email and password.
     """
 
     permission_classes = (AllowAny,)
@@ -43,16 +43,16 @@ class UserLoginAPIView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
-        serializer = serializers.CustomuserSerializer(user)
+        serializer = serializers.CustomUserSerializer(user)
         token = RefreshToken.for_user(user)
         data = serializer.data
         data["tokens"] = {"refresh": str(token), "access": str(token.access_token)}
         return Response(data, status=status.HTTP_200_OK)
 
 
-class UserLogoutView(GenericAPIView):
+class UserLogoutAPIView(GenericAPIView):
     """
-    An endpoint to logout users
+    An endpoint to logout users.
     """
 
     permission_classes = (IsAuthenticated,)
@@ -69,17 +69,17 @@ class UserLogoutView(GenericAPIView):
 
 class UserAPIView(RetrieveUpdateAPIView):
     """
-    Get, Update User information
+    Get, Update user information
     """
 
     permission_classes = (IsAuthenticated,)
-    serializer_class = serializers.CustomuserSerializer
+    serializer_class = serializers.CustomUserSerializer
 
     def get_object(self):
         return self.request.user
 
 
-class UserprofileAPIView(RetrieveUpdateAPIView):
+class UserProfileAPIView(RetrieveUpdateAPIView):
     """
     Get, Update user profile
     """
@@ -94,7 +94,7 @@ class UserprofileAPIView(RetrieveUpdateAPIView):
 
 class UserAvatarAPIView(RetrieveUpdateAPIView):
     """
-    Get, Update avatar
+    Get, Update user avatar
     """
 
     queryset = Profile.objects.all()

@@ -1,25 +1,40 @@
+# users/serializers.py
+
 from django.contrib.auth import authenticate
 from rest_framework import serializers
+
 from .models import CustomUser, Profile
 
 
-class CustomuserSerializer(serializers.ModelField):
+class CustomUserSerializer(serializers.ModelSerializer):
+    """
+    Serializer class to serialize CustomUser model.
+    """
+
     class Meta:
         model = CustomUser
         fields = ("id", "username", "email")
 
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
+class UserRegisterationSerializer(serializers.ModelSerializer):
+    """
+    Serializer class to serialize registration requests and create a new user.
+    """
+
     class Meta:
         model = CustomUser
         fields = ("id", "username", "email", "password")
         extra_kwargs = {"password": {"write_only": True}}
 
-        def create(self, validated_data):
-            return CustomUser.objects.create_user(**validated_data)
+    def create(self, validated_data):
+        return CustomUser.objects.create_user(**validated_data)
 
 
 class UserLoginSerializer(serializers.Serializer):
+    """
+    Serializer class to authenticate users with email and password.
+    """
+
     email = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
@@ -30,13 +45,21 @@ class UserLoginSerializer(serializers.Serializer):
         raise serializers.ValidationError("Incorrect Credentials")
 
 
-class ProfileSerializer(CustomuserSerializer):
+class ProfileSerializer(CustomUserSerializer):
+    """
+    Serializer class to serialize the user Profile model
+    """
+
     class Meta:
         model = Profile
         fields = ("bio",)
 
 
 class ProfileAvatarSerializer(serializers.ModelSerializer):
+    """
+    Serializer class to serialize the avatar
+    """
+
     class Meta:
         model = Profile
         fields = ("avatar",)

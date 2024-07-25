@@ -1,10 +1,12 @@
+# users/admin.py
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+
 from .forms import CustomUserChangeForm, CustomUserCreationForm
 from .models import CustomUser, Profile
 
 
-# Register your models here.
 class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
@@ -26,7 +28,6 @@ class CustomUserAdmin(UserAdmin):
         "is_superuser",
         "last_login",
     )
-
     list_filter = ("is_active", "is_staff", "is_superuser")
     fieldsets = (
         (None, {"fields": ("username", "email", "password")}),
