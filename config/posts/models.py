@@ -1,11 +1,12 @@
-from django.db import models
+# posts/models.py
+
 from django.conf import settings
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-# Create your models here.
 class Category(models.Model):
-    name = models.CharField(_("Category name"), max_length=200)
+    name = models.CharField(_("Category name"), max_length=100)
 
     class Meta:
         verbose_name = _("Category")
@@ -16,7 +17,7 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    title = models.CharField(_("Post title"), max_length=200)
+    title = models.CharField(_("Post title"), max_length=250)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="posts",
@@ -29,7 +30,7 @@ class Post(models.Model):
         settings.AUTH_USER_MODEL, related_name="post_likes", blank=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ("-created_at",)
@@ -48,7 +49,7 @@ class Comment(models.Model):
     )
     body = models.TextField(_("Comment body"))
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ("-created_at",)

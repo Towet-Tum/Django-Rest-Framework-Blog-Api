@@ -1,5 +1,8 @@
+# posts/serializers.py
+
 from rest_framework import serializers
-from .models import Category, Post, Comment
+
+from .models import Category, Comment, Post
 
 
 class CategoryReadSerializer(serializers.ModelSerializer):
@@ -30,7 +33,7 @@ class PostReadSerializer(serializers.ModelSerializer):
         return likes
 
 
-class PostWriteSerilizer(serializers.ModelSerializer):
+class PostWriteSerializer(serializers.ModelSerializer):
     author = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
